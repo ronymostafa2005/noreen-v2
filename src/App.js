@@ -42,7 +42,6 @@ function App() {
         <Route path="/Addtask" element={<Addtask />} />
         <Route path="/Calander" element={<Calander />} />
         <Route path="/Profile" element={<Profile />} />
-        
         <Route path="/ProgressPage" element={<ProgressPage />} />
         
       </Routes>
