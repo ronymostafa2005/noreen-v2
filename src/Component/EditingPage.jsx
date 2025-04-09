@@ -1,118 +1,231 @@
-import { Box, Typography, TextField, Button, MenuItem, IconButton, AvatarGroup, Avatar, Tooltip } from "@mui/material";
-import { ArrowBack, CloudUpload, Add } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-//------------------------------------
-export default function EditingPage() {
-  const navigate = useNavigate();
-  const priorities = ["High", "Medium", "Low"];
+import React, { useState, useRef } from 'react';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Avatar,
+  AvatarGroup,
+  IconButton,
+  Tooltip
+} from '@mui/material';
+import { Add, CloudUpload } from '@mui/icons-material';
+
+const ProjectForm = () => {
+  const [formData, setFormData] = useState({
+    projectName: '',
+    projectAuthority: '',
+    projectDescription: '',
+    dueDate: '',
+    uploadedFile: null
+  });
+
+  const fileInputRef = useRef(null);
   const teamMembers = [
-    { name: "Jerry", src: "https://randomuser.me/api/portraits/men/1.jpg" },
-    { name: "Melin", src: "https://randomuser.me/api/portraits/women/2.jpg" },
-    { name: "Avishak", src: "https://randomuser.me/api/portraits/men/3.jpg" },
-    { name: "Jafar", src: "https://randomuser.me/api/portraits/men/4.jpg" }
+    { name: 'Jerry', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
+    { name: 'Mehrin', avatar: 'https://randomuser.me/api/portraits/women/2.jpg' },
+    { name: 'Avishek', avatar: 'https://randomuser.me/api/portraits/men/3.jpg' },
+    { name: 'Jafar', avatar: 'https://randomuser.me/api/portraits/men/4.jpg' }
   ];
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        uploadedFile: file
+      }));
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    // هنا يمكنك إضافة منطق إرسال البيانات إلى الخادم
+  };
 
   return (
     <Box
+      component="form"
+      onSubmit={handleSubmit}
       sx={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        px: 2,
-        overflow: "hidden",
-        background: "linear-gradient(135deg, #a2d2ff, #f0f8ff)",
+        maxWidth: '500px',
+        margin: '2rem auto',
+        padding: '2rem',
+        backgroundColor: '#fff',
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
       }}
     >
-      {/* Background Waves */}
-      <svg
-        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
-        viewBox="0 0 1440 320"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#88c0ff"
-          fillOpacity="0.7"
-          d="M0,160L48,176C96,192,192,224,288,229.3C384,235,480,213,576,186.7C672,160,768,128,864,138.7C960,149,1056,203,1152,224C1248,245,1344,235,1392,229.3L1440,224V320H0Z"
-        ></path>
-        <path
-          fill="#ffffff"
-          fillOpacity="0.7"
-          d="M0,224L48,218.7C96,213,192,203,288,197.3C384,192,480,192,576,181.3C672,171,768,149,864,133.3C960,117,1056,107,1152,133.3C1248,160,1344,224,1392,256L1440,288V320H0Z"
-        ></path>
-      </svg>
+      <Typography variant="h4" sx={{ mb: 3, textAlign: 'center', color: '#004AAD' }}>
+      Edit Project
+      </Typography>
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        style={{ width: "100%", maxWidth: "500px" }}
-      >
-        <Box sx={{ bgcolor: "white", p: 3, borderRadius: 3, boxShadow: 5 }}> 
-          {/* Header */}
-          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-            <Tooltip title="Back">
-              <IconButton color="primary" onClick={() => navigate(-1)}>
-                <ArrowBack />
-              </IconButton>
-            </Tooltip>
-            <Typography variant="h6" fontWeight="bold" sx={{ flex: 1, textAlign: "center" }}>
-              Add Task
-            </Typography>
-          </Box>
-          
-          {/* Form Fields */}
-          <TextField fullWidth label="Task Name" variant="outlined" margin="dense" defaultValue="PRD" />
-          <TextField fullWidth label="Task Description" variant="outlined" margin="dense" defaultValue="PRD" />
-          
-          <TextField select fullWidth label="Task Probability" variant="outlined" margin="dense">
-            {priorities.map((option) => (
-              <MenuItem key={option} value={option}>{option}</MenuItem>
-            ))}
-          </TextField>
-          
-          {/* Upload Files */}
-          <Box sx={{ display: "flex", alignItems: "center", mt: 2, mb: 1 }}>
-            <Typography variant="body2" sx={{ flex: 1 }}>gantchart.pdf</Typography>
-            <Tooltip title="Upload File">
-              <IconButton color="primary">
-                <CloudUpload />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          
-          {/* Team Members */}
-          <Typography variant="body2" sx={{ mt: 2, mb: 1 }}>Team Member</Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <AvatarGroup max={4}>
-              {teamMembers.map((member, index) => (
-                <Tooltip key={index} title={member.name}>
-                  <Avatar src={member.src} />
-                </Tooltip>
-              ))}
-            </AvatarGroup>
-            <Tooltip title="Add Member">
-              <IconButton color="primary" sx={{ ml: 1, border: "1px solid #1976d2", borderRadius: "50%" }}>
-                <Add />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          
-          {/* Due Date */}
-          <TextField fullWidth label="Due Date" variant="outlined" margin="dense" defaultValue="November 01, 2025" />
-          <TextField fullWidth label="Due Time" variant="outlined" margin="dense" defaultValue="11:30 PM" />
-          <TextField fullWidth label="Reminder" variant="outlined" margin="dense" defaultValue="30m" />
-          
-          {/* Save Button */}
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button fullWidth variant="contained" sx={{ mt: 2, bgcolor: "#004aad" }}>
-              Save
-            </Button>
-          </motion.div>
+      {/* Project Name */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Project Name
+        </Typography>
+        <TextField
+          fullWidth
+          name="projectName"
+          value={formData.projectName}
+          onChange={handleChange}
+          placeholder="Enter project name"
+          size="small"
+          required
+        />
+      </Box>
+
+      {/* Project Priority */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Project Priority
+        </Typography>
+        <RadioGroup
+          name="projectAuthority"
+          value={formData.projectAuthority}
+          onChange={handleChange}
+          row
+        >
+          {['High', 'Medium', 'Low'].map((option) => (
+            <FormControlLabel
+              key={option}
+              value={option}
+              control={<Radio color="primary" size="small" />}
+              label={option}
+              sx={{ mr: 2 }}
+            />
+          ))}
+        </RadioGroup>
+      </Box>
+
+      {/* File Upload */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Upload Files
+        </Typography>
+        <Box
+          sx={{
+            border: '1px dashed #ddd',
+            p: 2,
+            borderRadius: '8px',
+            backgroundColor: '#f9f9f9',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            '&:hover': {
+              borderColor: '#004AAD'
+            }
+          }}
+          onClick={() => fileInputRef.current.click()}
+        >
+          <Typography variant="body2" sx={{ color: '#666' }}>
+            {formData.uploadedFile ? formData.uploadedFile.name : 'No file selected'}
+          </Typography>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            style={{ display: 'none' }}
+          />
+          <IconButton size="small">
+            <CloudUpload fontSize="small" color="primary" />
+          </IconButton>
         </Box>
-      </motion.div>
+      </Box>
+
+      {/* Project Description */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Project Description
+        </Typography>
+        <TextField
+          fullWidth
+          multiline
+          rows={4}
+          name="projectDescription"
+          value={formData.projectDescription}
+          onChange={handleChange}
+          size="small"
+          placeholder="Describe your project..."
+        />
+      </Box>
+
+      {/* Team Members */}
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Team Members
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <AvatarGroup max={4} sx={{ '& .MuiAvatar-root': { width: 32, height: 32 } }}>
+            {teamMembers.map((member, index) => (
+              <Tooltip key={index} title={member.name}>
+                <Avatar alt={member.name} src={member.avatar} />
+              </Tooltip>
+            ))}
+          </AvatarGroup>
+          <Tooltip title="Add team member">
+            <IconButton
+              size="small"
+              sx={{
+                border: '1px solid #ddd',
+                borderRadius: '50%',
+                '&:hover': { backgroundColor: '#f0f0f0' }
+              }}
+            >
+              <Add fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+
+      {/* Due Date */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          Due Date
+        </Typography>
+        <TextField
+          fullWidth
+          type="date"
+          name="dueDate"
+          value={formData.dueDate}
+          onChange={handleChange}
+          size="small"
+          InputLabelProps={{ shrink: true }}
+          inputProps={{ min: new Date().toISOString().split('T')[0] }}
+        />
+      </Box>
+
+      {/* Submit Button */}
+      <Button
+        fullWidth
+        type="submit"
+        variant="contained"
+        sx={{
+          backgroundColor: '#004AAD',
+          py: 1.5,
+          '&:hover': { backgroundColor: '#003682' },
+          fontSize: '1rem',
+          fontWeight: 600
+        }}
+      >
+        Save Project
+      </Button>
     </Box>
   );
-}
+};
+
+export default ProjectForm;

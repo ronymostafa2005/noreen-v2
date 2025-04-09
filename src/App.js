@@ -10,9 +10,12 @@ import ProjectDetails from "./Component/ProjectDetails";
 import Projects from "./Component/Projects";
 import Addtask from "./Component/Addtask";
 import Loader from "./Component/Loader";
-import ProgressPage from "./Component/ProgressPage";
 import Calander from "./Component/Calander";
+import AddProject from "./Component/Addproject";
+import Viewtask from "./Component/Viewtask";
+import ProgressPage from "./Component/ProgressPage";
 import Profile from "./Component/Profile";
+import Tasklist from "./Component/Tasklist";
 //-----------------------------------------------
 function App() {
   const [loading, setLoading] = useState(true);
@@ -38,12 +41,14 @@ function App() {
         <Route path="/Projects" element={<Projects />} />
         <Route path="/EditingPage" element={<EditingPage />} />
         <Route path="/GamificationPage" element={<GamificationPage />} />
-        <Route path="/ProjectDetails" element={<ProjectDetails />} />
+        <Route path="/projectdetails/:id" element={<ProjectDetails />} />
+        <Route path="/Addproject" element={<AddProject />} />
+        <Route path="/tasklist" element={<Tasklist />} />
+        <Route path="/viewtask" element={<Viewtask />} />
         <Route path="/Addtask" element={<Addtask />} />
         <Route path="/Calander" element={<Calander />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/ProgressPage" element={<ProgressPage />} />
-        
       </Routes>
     </Router>
     

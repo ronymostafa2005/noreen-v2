@@ -13,9 +13,16 @@ import {
   Button,
   Select,
   FormControl,
-  InputLabel
+  InputLabel,
+  Badge,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Divider
 } from "@mui/material";
-import { Apps, Notifications, Close, Edit, Save } from "@mui/icons-material";
+import { Apps, Notifications, Close, Edit, Save, Add } from "@mui/icons-material";
 
 const tasks = [
   { 
@@ -53,13 +60,50 @@ const tasks = [
   },
 ];
 
+const notifications = [
+  {
+    id: 1,
+    title: "New task assigned",
+    message: "You have been assigned a new task: UI Design",
+    time: "10 minutes ago",
+    read: false,
+    icon: "📋"
+  },
+  {
+    id: 2,
+    title: "Meeting reminder",
+    message: "Team meeting in 30 minutes",
+    time: "1 hour ago",
+    read: false,
+    icon: "📅"
+  },
+  {
+    id: 3,
+    title: "Task completed",
+    message: "Jane completed the requirements document",
+    time: "3 hours ago",
+    read: true,
+    icon: "✅"
+  },
+  {
+    id: 4,
+    title: "System update",
+    message: "New system update available",
+    time: "1 day ago",
+    read: true,
+    icon: "🔄"
+  }
+];
+
 export default function TaskProgress() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [notifAnchorEl, setNotifAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(null);
   const [taskList, setTaskList] = useState(tasks);
+  const [unreadCount] = useState(notifications.filter(n => !n.read).length);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -67,6 +111,14 @@ export default function TaskProgress() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNotifMenuOpen = (event) => {
+    setNotifAnchorEl(event.currentTarget);
+  };
+
+  const handleNotifMenuClose = () => {
+    setNotifAnchorEl(null);
   };
 
   const handleMenuItemClick = (path) => {
@@ -102,6 +154,10 @@ export default function TaskProgress() {
     setIsEditing(false);
   };
 
+  const handleAddTask = () => {
+    navigate("/AddTask");
+  };
+
   return (
     <Box sx={{ 
       minHeight: "100vh", 
@@ -134,15 +190,70 @@ export default function TaskProgress() {
           </IconButton>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={() => handleMenuItemClick("/Projects")}>Projects</MenuItem>
-            <MenuItem onClick={() => handleMenuItemClick("/Addtask")}>Tasks list</MenuItem>
+            <MenuItem onClick={() => handleMenuItemClick("/tasklist")}>Tasks list</MenuItem>
             <MenuItem onClick={() => handleMenuItemClick("/ProgressPage")}>Progress</MenuItem>
             <MenuItem onClick={() => handleMenuItemClick("/Calander")}>Calendar</MenuItem>
             <MenuItem onClick={() => handleMenuItemClick("/Profile")}>Profile</MenuItem>
           </Menu>
           <Typography variant="h6" fontWeight="bold">Friday, 26</Typography>
-          <IconButton>
-            <Notifications sx={{ color: "#004aad" }} />
+          <IconButton onClick={handleNotifMenuOpen}>
+            <Badge badgeContent={unreadCount} color="error">
+              <Notifications sx={{ color: "#004aad" }} />
+            </Badge>
           </IconButton>
+          <Menu
+            anchorEl={notifAnchorEl}
+            open={Boolean(notifAnchorEl)}
+            onClose={handleNotifMenuClose}
+            PaperProps={{
+              style: {
+                width: '350px',
+                maxHeight: '400px',
+                padding: '10px 0'
+              }
+            }}
+          >
+            <Typography variant="h6" sx={{ px: 2, py: 1, fontWeight: 'bold' }}>
+              Notifications
+            </Typography>
+            <Divider />
+            <List sx={{ width: '100%' }}>
+              {notifications.map((notification) => (
+                <ListItem 
+                  key={notification.id} 
+                  sx={{ 
+                    bgcolor: notification.read ? 'inherit' : '#f0f7ff',
+                    '&:hover': { bgcolor: '#f5f5f5' }
+                  }}
+                >
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: 'transparent', fontSize: '1.2rem' }}>
+                      {notification.icon}
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={notification.title}
+                    secondary={
+                      <>
+                        <Typography variant="body2" color="text.primary">
+                          {notification.message}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {notification.time}
+                        </Typography>
+                      </>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 1 }}>
+              <Button size="small" color="primary">
+                View All Notifications
+              </Button>
+            </Box>
+          </Menu>
         </Box>
         
         {/* Title */}
@@ -207,6 +318,26 @@ export default function TaskProgress() {
             </Box>
           </Card>
         ))}
+
+        {/* Add Task Button */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Button 
+            variant="contained" 
+            startIcon={<Add />}
+            onClick={handleAddTask}
+            sx={{
+              bgcolor: "#004aad",
+              '&:hover': { bgcolor: "#003882" },
+              borderRadius: '20px',
+              px: 4,
+              py: 1,
+              textTransform: 'none',
+              fontSize: '1rem'
+            }}
+          >
+            Add Task
+          </Button>
+        </Box>
       </Box>
 
       {/* Task Detail Panel */}

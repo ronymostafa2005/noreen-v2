@@ -1,5 +1,5 @@
 import { Box, Typography, IconButton, Card, Avatar, Button, TextField } from "@mui/material";
-import { ArrowLeft, Trash2, Pencil, MessageCircle, PlusCircle } from "lucide-react";
+import { ArrowLeft, Trash2, Pencil, MessageCircle, PlusCircle, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 //##################################################
 const tasks = [
@@ -10,6 +10,14 @@ const tasks = [
 
 export default function ProjectDetails() {
   const navigate = useNavigate();
+
+  const handleViewTask = (taskIndex) => {
+    navigate(`/viewtask`);
+  };
+
+  const handleAddTask = () => {
+    navigate('/addtask');
+  };
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#f9f9f9", p: 2, display: "flex", flexDirection: "column" }}>
@@ -33,6 +41,9 @@ export default function ProjectDetails() {
             <Box sx={{ flex: 1, bgcolor: "#ddd", height: 8, borderRadius: 4, overflow: "hidden" }}>
               <Box sx={{ width: `${task.progress}%`, height: "100%", bgcolor: "#4caf50" }}></Box>
             </Box>
+            <IconButton color="primary" onClick={() => handleViewTask(index)}>
+              <Eye size={20} />
+            </IconButton>
             <IconButton color="error"><Trash2 size={20} /></IconButton>
             <IconButton color="primary"><MessageCircle size={20} /></IconButton>
             <IconButton color="primary"><Pencil size={20} /></IconButton>
@@ -48,7 +59,15 @@ export default function ProjectDetails() {
 
       {/* Add Task Button */}
       <Box sx={{ position: "fixed", bottom: 20, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" color="primary" startIcon={<PlusCircle size={24} />} sx={{ borderRadius: "50px", textTransform: "none" }}>Add Task</Button>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          startIcon={<PlusCircle size={24} />} 
+          sx={{ borderRadius: "50px", textTransform: "none" }}
+          onClick={handleAddTask}
+        >
+          Add Task
+        </Button>
       </Box>
     </Box>
   );

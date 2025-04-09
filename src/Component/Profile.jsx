@@ -1,24 +1,37 @@
 import React, { useState } from "react";
 import { AiFillSetting } from "react-icons/ai";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [showSettings, setShowSettings] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // يمكنك إضافة أي منطق للخروج هنا قبل التوجيه
+    navigate("/"); // التوجيه إلى الصفحة الرئيسية
+  };
 
   return (
     <div style={styles.container}>
       <div style={styles.wrapper}>
         {showSettings ? (
-          <SettingsCard onClose={() => setShowSettings(false)} />
+          <SettingsCard 
+            onClose={() => setShowSettings(false)} 
+            onLogout={handleLogout}
+          />
         ) : (
-          <ProfileCard onEdit={() => setShowSettings(true)} />
+          <ProfileCard 
+            onEdit={() => setShowSettings(true)} 
+            onLogout={handleLogout}
+          />
         )}
       </div>
     </div>
   );
 };
 
-const ProfileCard = ({ onEdit }) => (
+const ProfileCard = ({ onEdit, onLogout }) => (
   <div style={styles.card}>
     <div style={styles.profileContainer}>
       <Avatar sx={{ width: 80, height: 80, bgcolor: "#007BFF", fontSize: "28px" }}>A</Avatar>
@@ -30,23 +43,35 @@ const ProfileCard = ({ onEdit }) => (
     <button style={styles.settingsButton} onClick={onEdit}>
       <span>Settings</span> <AiFillSetting size={18} />
     </button>
+    <button 
+      style={{ ...styles.button, backgroundColor: "#f44336", marginTop: "10px" }} 
+      onClick={onLogout}
+    >
+      Logout
+    </button>
   </div>
 );
 
-const SettingsCard = ({ onClose }) => (
+const SettingsCard = ({ onClose, onLogout }) => (
   <div style={styles.card}>
     <h2 style={styles.title}>Settings</h2>
     <div style={styles.settingsContainer}>
       {[
         { label: "Permission", checked: true },
         { label: "Push Notification", checked: false },
-        { label: "Dark Mode", checked: false },
+        // تم إزالة Dark Mode من هنا
       ].map((item, index) => (
         <SettingOption key={index} label={item.label} checked={item.checked} />
       ))}
       <button style={styles.ghostButton}>About Application</button>
     </div>
     <button style={styles.button} onClick={onClose}>Back</button>
+    <button 
+      style={{ ...styles.button, backgroundColor: "#f44336", marginTop: "10px" }} 
+      onClick={onLogout}
+    >
+      Logout
+    </button>
   </div>
 );
 
