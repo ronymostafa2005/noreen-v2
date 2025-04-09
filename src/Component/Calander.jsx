@@ -3,16 +3,16 @@ import React, { useState } from 'react';
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([
-    { id: 1, title: 'اجتماع فريق العمل', date: new Date(2023, 10, 15, 10, 0), color: '#4CAF50' },
-    { id: 2, title: 'عرض تقديمي للعميل', date: new Date(2023, 10, 18, 14, 30), color: '#2196F3' },
-    { id: 3, title: 'مراجعة المشروع', date: new Date(2023, 10, 20, 9, 0), color: '#FF9800' },
+    { id: 1, title: 'Team Meeting', date: new Date(2023, 10, 15, 10, 0), color: '#E1F5FE' },
+    { id: 2, title: 'Client Presentation', date: new Date(2023, 10, 18, 14, 30), color: '#2196F3' },
+    { id: 3, title: 'Project Review', date: new Date(2023, 10, 20, 9, 0), color: '#FF9800' },
   ]);
   const [showEventForm, setShowEventForm] = useState(false);
-  const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '', color: '#4CAF50' });
+  const [newEvent, setNewEvent] = useState({ title: '', date: '', time: '', color: '#E1F5FE' });
   const [editingEvent, setEditingEvent] = useState(null);
   const [recentEvents, setRecentEvents] = useState([]);
 
-  // أنماط CSS مضمنة
+  // Inline CSS styles
   const styles = {
     container: {
       fontFamily: 'Arial, sans-serif',
@@ -36,14 +36,14 @@ const Calendar = () => {
     },
     button: {
       padding: '8px 16px',
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#03A9F4',
       color: 'white',
       border: 'none',
       borderRadius: '4px',
       cursor: 'pointer',
       fontSize: '14px',
       '&:hover': {
-        backgroundColor: '#3e8e41'
+        backgroundColor: '#0288D1'
       }
     },
     calendarGrid: {
@@ -70,7 +70,7 @@ const Calendar = () => {
       backgroundColor: '#f9f9f9'
     },
     today: {
-      backgroundColor: '#e8f5e9',
+      backgroundColor: '#E1F5FE',
       fontWeight: 'bold'
     },
     event: {
@@ -183,20 +183,20 @@ const Calendar = () => {
     }
   };
 
-  // الحصول على اسم الشهر والسنة الحالية
-  const monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
-    "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+  // Get current month and year
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   const currentMonth = monthNames[currentDate.getMonth()];
   const currentYear = currentDate.getFullYear();
 
-  // تغيير الشهر
+  // Change month
   const changeMonth = (increment) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
   };
 
-  // إنشاء أيام التقويم
+  // Render calendar days
   const renderDays = () => {
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
@@ -212,7 +212,7 @@ const Calendar = () => {
 
     let days = [];
     
-    // أيام الشهر السابق
+    // Previous month days
     const prevMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
     for (let i = startDay - 1; i >= 0; i--) {
       days.push(
@@ -222,7 +222,7 @@ const Calendar = () => {
       );
     }
 
-    // أيام الشهر الحالي
+    // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
       const dayEvents = events.filter(event => 
         event.date.getDate() === i && 
@@ -252,7 +252,7 @@ const Calendar = () => {
       );
     }
 
-    // أيام الشهر التالي
+    // Next month days
     const daysToAdd = 42 - days.length;
     for (let i = 1; i <= daysToAdd; i++) {
       days.push(
@@ -278,7 +278,7 @@ const Calendar = () => {
 
   const handleAddEvent = () => {
     setEditingEvent(null);
-    setNewEvent({ title: '', date: '', time: '', color: '#4CAF50' });
+    setNewEvent({ title: '', date: '', time: '', color: '#E1F5FE' });
     setShowEventForm(true);
   };
 
@@ -289,7 +289,7 @@ const Calendar = () => {
     const eventDate = new Date(year, month - 1, day, hours, minutes);
     
     if (editingEvent) {
-      // تحديث الحدث الموجود
+      // Update existing event
       const updatedEvents = events.map(event => 
         event.id === editingEvent.id ? 
         { ...event, title: newEvent.title, date: eventDate, color: newEvent.color } : 
@@ -297,7 +297,7 @@ const Calendar = () => {
       );
       setEvents(updatedEvents);
     } else {
-      // إضافة حدث جديد
+      // Add new event
       const newEventObj = {
         id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1,
         title: newEvent.title,
@@ -335,25 +335,25 @@ const Calendar = () => {
     <div style={styles.container}>
       <div style={styles.header}>
         <div style={styles.monthSelector}>
-          <button style={styles.button} onClick={() => changeMonth(-1)}>الشهر السابق</button>
+          <button style={styles.button} onClick={() => changeMonth(-1)}>Previous Month</button>
           <div style={styles.currentMonth}>{currentMonth} {currentYear}</div>
-          <button style={styles.button} onClick={() => changeMonth(1)}>الشهر التالي</button>
+          <button style={styles.button} onClick={() => changeMonth(1)}>Next Month</button>
         </div>
-        <button style={styles.button} onClick={handleAddEvent}>إضافة حدث</button>
+        <button style={styles.button} onClick={handleAddEvent}>Add Event</button>
       </div>
 
       <div style={styles.calendarGrid}>
-        {['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'].map(day => (
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} style={styles.dayHeader}>{day}</div>
         ))}
         {renderDays()}
       </div>
 
-      {/* صندوق الأحداث الحديثة */}
+      {/* Recent Events Box */}
       <div style={styles.recentEventsBox}>
-        <div style={styles.recentEventsTitle}>الأحداث المضافة حديثاً</div>
+        <div style={styles.recentEventsTitle}>Recently Added Events</div>
         {recentEvents.length === 0 ? (
-          <div>لا توجد أحداث مضافة حديثاً</div>
+          <div>No recent events</div>
         ) : (
           recentEvents.map(event => (
             <div key={event.id} style={styles.eventItem}>
@@ -368,13 +368,13 @@ const Calendar = () => {
                   style={styles.editButton}
                   onClick={() => handleEventClick(event)}
                 >
-                  تعديل
+                  Edit
                 </button>
                 <button 
                   style={styles.deleteButton}
                   onClick={() => handleDeleteEvent(event.id)}
                 >
-                  حذف
+                  Delete
                 </button>
               </div>
             </div>
@@ -382,14 +382,14 @@ const Calendar = () => {
         )}
       </div>
 
-      {/* نموذج إضافة/تعديل الحدث */}
+      {/* Add/Edit Event Form */}
       {showEventForm && (
         <div style={styles.eventFormOverlay} onClick={closeForm}>
           <div style={styles.eventForm} onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginTop: 0 }}>{editingEvent ? 'تعديل الحدث' : 'إضافة حدث جديد'}</h3>
+            <h3 style={{ marginTop: 0 }}>{editingEvent ? 'Edit Event' : 'Add New Event'}</h3>
             <form onSubmit={handleEventSubmit}>
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>عنوان الحدث:</label>
+                <label style={styles.formLabel}>Event Title:</label>
                 <input
                   type="text"
                   name="title"
@@ -400,7 +400,7 @@ const Calendar = () => {
                 />
               </div>
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>التاريخ:</label>
+                <label style={styles.formLabel}>Date:</label>
                 <input
                   type="date"
                   name="date"
@@ -411,7 +411,7 @@ const Calendar = () => {
                 />
               </div>
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>الوقت:</label>
+                <label style={styles.formLabel}>Time:</label>
                 <input
                   type="time"
                   name="time"
@@ -422,9 +422,9 @@ const Calendar = () => {
                 />
               </div>
               <div style={styles.formGroup}>
-                <label style={styles.formLabel}>لون الحدث:</label>
+                <label style={styles.formLabel}>Event Color:</label>
                 <div style={styles.colorOptions}>
-                  {['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#F44336'].map(color => (
+                  {['#E1F5FE', '#B3E5FC', '#81D4FA', '#4FC3F7', '#29B6F6'].map(color => (
                     <div
                       key={color}
                       style={{
@@ -443,10 +443,10 @@ const Calendar = () => {
                   style={{...styles.button, backgroundColor: '#f44336'}}
                   onClick={() => setShowEventForm(false)}
                 >
-                  إلغاء
+                  Cancel
                 </button>
                 <button type="submit" style={styles.button}>
-                  {editingEvent ? 'حفظ التعديلات' : 'حفظ'}
+                  {editingEvent ? 'Save Changes' : 'Save'}
                 </button>
               </div>
             </form>

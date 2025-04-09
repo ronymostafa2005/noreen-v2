@@ -72,10 +72,10 @@ const ProjectCard = ({ project, navigate, handleDelete }) => (
       >
         {project.priority}
       </Typography>
-      <IconButton color="primary" onClick={() => navigate(`/editproject/${project.id}`)}>
+      <IconButton color="primary" onClick={() => navigate(`/EditingPage`)}>
         <Edit />
       </IconButton>
-      <IconButton color="primary" onClick={() => navigate(`/gamification/${project.id}`)}>
+      <IconButton color="primary" onClick={() => navigate(`/GamificationPage`)}>
         <EmojiEvents sx={{ color: "#004aad" }} />
       </IconButton>
       <IconButton color="primary" onClick={() => navigate(`/projectdetails/${project.id}`)}>
