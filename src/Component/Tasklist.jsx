@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 
@@ -9,15 +11,54 @@ const Tasklist = () => {
     workZone: ['task5']
   });
 
-  const [newTask, setNewTask] = useState('');
+  const [newTasks, setNewTasks] = useState({
+    todo: '',
+    inProgress: '',
+    done: '',
+    workZone: ''
+  });
+
+  const [draggedItem, setDraggedItem] = useState(null);
 
   const handleAddTask = (section) => {
-    if (newTask.trim()) {
+    if (newTasks[section].trim()) {
       setTasks({
         ...tasks,
-        [section]: [...tasks[section], newTask]
+        [section]: [...tasks[section], newTasks[section]]
       });
-      setNewTask('');
+      setNewTasks({
+        ...newTasks,
+        [section]: ''
+      });
+    }
+  };
+
+  const handleDragStart = (e, task, section) => {
+    setDraggedItem({ task, section });
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetSection) => {
+    e.preventDefault();
+    if (draggedItem) {
+      // Remove from original section
+      const updatedSourceTasks = tasks[draggedItem.section].filter(
+        task => task !== draggedItem.task
+      );
+      
+      // Add to target section
+      const updatedTargetTasks = [...tasks[targetSection], draggedItem.task];
+      
+      setTasks({
+        ...tasks,
+        [draggedItem.section]: updatedSourceTasks,
+        [targetSection]: updatedTargetTasks
+      });
+      
+      setDraggedItem(null);
     }
   };
 
@@ -75,7 +116,9 @@ const Tasklist = () => {
       marginBottom: '10px',
       borderRadius: '6px',
       fontSize: '14px',
-      color: '#333'
+      color: '#333',
+      cursor: 'grab',
+      userSelect: 'none'
     },
     timer: {
       textAlign: 'center',
@@ -121,18 +164,29 @@ const Tasklist = () => {
       
       <div style={styles.sectionsContainer}>
         {/* TO DO Section */}
-        <div style={styles.taskSection}>
+        <div 
+          style={styles.taskSection}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, 'todo')}
+        >
           <h2 style={styles.sectionTitle}>TO DO</h2>
           <div style={styles.taskItems}>
             {tasks.todo.map((task, index) => (
-              <div key={`todo-${index}`} style={styles.taskItem}>{task}</div>
+              <div 
+                key={`todo-${index}`} 
+                style={styles.taskItem}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task, 'todo')}
+              >
+                {task}
+              </div>
             ))}
           </div>
           <div style={styles.inputContainer}>
             <input
               type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
+              value={newTasks.todo}
+              onChange={(e) => setNewTasks({...newTasks, todo: e.target.value})}
               placeholder="Add new task"
               style={styles.taskInput}
             />
@@ -146,18 +200,29 @@ const Tasklist = () => {
         </div>
         
         {/* In Progress Section */}
-        <div style={styles.taskSection}>
+        <div 
+          style={styles.taskSection}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, 'inProgress')}
+        >
           <h2 style={styles.sectionTitle}>In progress</h2>
           <div style={styles.taskItems}>
             {tasks.inProgress.map((task, index) => (
-              <div key={`progress-${index}`} style={styles.taskItem}>{task}</div>
+              <div 
+                key={`progress-${index}`} 
+                style={styles.taskItem}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task, 'inProgress')}
+              >
+                {task}
+              </div>
             ))}
           </div>
           <div style={styles.inputContainer}>
             <input
               type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
+              value={newTasks.inProgress}
+              onChange={(e) => setNewTasks({...newTasks, inProgress: e.target.value})}
               placeholder="Add new task"
               style={styles.taskInput}
             />
@@ -171,18 +236,29 @@ const Tasklist = () => {
         </div>
         
         {/* Done Section */}
-        <div style={styles.taskSection}>
+        <div 
+          style={styles.taskSection}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, 'done')}
+        >
           <h2 style={styles.sectionTitle}>done</h2>
           <div style={styles.taskItems}>
             {tasks.done.map((task, index) => (
-              <div key={`done-${index}`} style={styles.taskItem}>{task}</div>
+              <div 
+                key={`done-${index}`} 
+                style={styles.taskItem}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task, 'done')}
+              >
+                {task}
+              </div>
             ))}
           </div>
           <div style={styles.inputContainer}>
             <input
               type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
+              value={newTasks.done}
+              onChange={(e) => setNewTasks({...newTasks, done: e.target.value})}
               placeholder="Add new task"
               style={styles.taskInput}
             />
@@ -196,18 +272,29 @@ const Tasklist = () => {
         </div>
         
         {/* Work Zone Section */}
-        <div style={styles.taskSection}>
+        <div 
+          style={styles.taskSection}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, 'workZone')}
+        >
           <h2 style={styles.sectionTitle}>work zone</h2>
           <div style={styles.taskItems}>
             {tasks.workZone.map((task, index) => (
-              <div key={`workzone-${index}`} style={styles.taskItem}>{task}</div>
+              <div 
+                key={`workzone-${index}`} 
+                style={styles.taskItem}
+                draggable
+                onDragStart={(e) => handleDragStart(e, task, 'workZone')}
+              >
+                {task}
+              </div>
             ))}
           </div>
           <div style={styles.inputContainer}>
             <input
               type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
+              value={newTasks.workZone}
+              onChange={(e) => setNewTasks({...newTasks, workZone: e.target.value})}
               placeholder="Add new task"
               style={styles.taskInput}
             />
